@@ -1,0 +1,182 @@
+israelish
+Shachar Israeli 203713094
+EX3 - HTTP Server
+Submitted Files: ex3.tar with server.c, threadpool.c and README.
+
+
+1.server.c - The server should handle the connections with the clients.
+
+2.threadpool.c - to enable multithreaded program, the server should create threads that handle the connections with the clients.	
+Since, the server should maintain a limited number of threads, it constructs a thread pool.
+
+3.README - this file. will try to give a short brief on my work and to explain about my methots.
+
+
+** Short Brief**
+
+The server should handle the connections with the clients.
+our server is using TCP, so we have a socket for each client it talks to.
+there is always one socket where the server listens to connections and for each client connection request, the server opens another socket.
+In order to enable multithreaded program, the server should create threads that handle the connections with the clients.
+Since, the server should maintain a limited number of threads, it constructs a thread pool.
+In other words, the server creates the pool of threads in advanced and each time it needs a thread to handle a client connection, it takes one from the pool or enqueue the request if there is no available thread in the pool.
+
+** Remarks**
+
+
+#define RETURN_FILE 2001 
+#define DIRECTORY_CONTENT 2002
+#define RETURN_HTML_FILE 2003 - return the index.html file in the folder that the client search for.
+#define ITS_NOT_OK -1  - When there's a problem with a test we did      
+#define ITS_OK 1 -  When there's a  with a test we did
+
+
+** install & load **
+
+in linux terminal, go to the folder that containing the Ex.
+
+type terminal:
+
+1. gcc -o server server.c threadpool.c threadpool.h  -lpthread
+
+2. ./server <port> <pool-size> <max-number-of-request>
+
+(if you want to see my Allocation and heap use, you can write: /valgrind ./server ...)
+
+**Program Functions**
+
+###The threadpool###
+
+* create_threadpool creates a fixed-sized thread
+ * pool.  If the function succeeds, it returns a (non-NULL)
+ * "threadpool", else it returns NULL.
+ * this function should:
+ * 1. input sanity check
+ * 2. initialize the threadpool structure
+ * 3. initialized mutex and conditional variables
+ * 4. create the threads, the thread init function is do_work and its argument is the initialized threadpool.
+ */
+
+1.threadpool* create_threadpool(int num_threads_in_pool);
+
+/** create_threadpool creates a fixed-sized thread*/
+
+output: On success, the function return the pool, otherwise, else it returns NULL. and the server will quit with usage
+
+
+2. typedef int (*dispatch_fn)(void *);
+
+
+/** the  type of work we send to the pool. */
+
+
+3.void dispatch(threadpool* from_me, dispatch_fn dispatch_to_here, void *arg);
+
+/** * dispatch enter a "job" of type work_t into the queue.
+ * when an available thread takes a job from the queue, it will
+ * call the function "dispatch_to_here" with argument "arg". */
+	
+
+4.void* do_work(void* p);
+
+/** The work function of the thread */
+output: On success, the function will take a work from the queae 
+
+
+5.void destroy_threadpool(threadpool* destroyme);
+/**
+ * destroy_threadpool kills the threadpool, causing
+ * all threads in it to commit suicide, and then
+ * frees all the memory associated with the threadpool.
+ */
+
+
+**private methods
+
+
+1.void free_all(threadpool * pool);
+/** free all my allocated . */
+output: none. 
+2.void freeLinkedList(work_t* headList);
+/** will free our job linedlist if there is more jobs to be done*/
+3.void popOutWork(threadpool * pool);
+/** take the job from the head of the queae and make the second job to be the first */
+
+
+
+###The server###
+
+1.int isNum(char* s);
+/** check if the char* str is a number   */
+output: return 1 if its every digit is anumber, and -1 if not.
+  
+2.void giveTime(char timebuf[])
+
+ /** construct the date to timebuf */
+
+3.char *get_mime_type(char *name);
+
+/**Content type is the mime type of the response body.*/
+output: return null if doesnt found the right type, else return the type.
+
+4.char* response_400();
+/**return the 400 response .*/
+output:return response On success, ow return null
+
+5.char* response_501();
+/**return the 501 response .*/
+output:return response On success, ow return null
+
+6.char* response_500();
+/**return the 500 response .*/
+output:return response On success, ow return null
+
+7.char* response_404();
+/**return the 404 response .*/
+output:return response On success, ow return null
+
+8.char* response_403();
+/**return the 403 response .*/
+output:return response On success, ow return null
+
+9.char* response_302(char* path);
+/**return the 302 response .*/
+output:return response On success, ow return null
+
+10.char* getFileHeader(char *file);
+/** return the file header */
+output:return response On success, ow return null
+
+11.int pathAccsess(char* path);
+/**go to every folder in the path and check that i have the right Accsess to executing*/
+output:return the num of the right response On success, ow return null
+
+12.char* dir_content(char* path);//dir content directory
+/** if the client want a folder that doesnt have */
+output:return the content dir  On success, ow return null
+
+13.int handle_Fun ( void * p );
+/** the main function of the server program. will send this function to the threads. this function will deal with the request of the client */
+output:return 1  On success, ow return 0
+
+14.int buildServer(int port);
+/**build the server and open the main socket.*/
+output:return the fd On success, ow return 0
+
+15.int countDigit(int num);
+/**count the digit*/
+output:return 1 On success, ow return -1
+
+16.int checkRequest(char *method, char *path, char *protocol);
+/** this function will return the right num of response that i need */
+output:return the right num of the request On success, ow return 500 
+
+17.void sendFileData(char* file,int newfd);
+/** after we send the file header, we need to send the content of the file. */
+output:void. just return. 
+
+ **hope you will enjoy my EX3 **
+ Shachar Israeli
+ user name: israelish
+
+
