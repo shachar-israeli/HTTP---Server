@@ -1,8 +1,14 @@
-israelish
-Shachar Israeli 203713094
+
 EX3 - HTTP Server
 Submitted Files: ex3.tar with server.c, threadpool.c and README.
 
+
+This program implements an HTTP Server that can handle requests from the kind of "GET" method, and HTTP/1.0 or HTTP/1.1 versions.
+The server handles the connections with the clients. There is always one socket where the server listens to connections and for each client connection request, the
+server opens another socket especially for the specific client. In order to make this server a multithreaded program, it creates threads (in the quantity asked by
+the user in the cmd input) that handle the connections with the clients. Since, the server maintains a limited number of threads, it constructs a thread pool.
+This pool of threads is being created in advanced and each time it needs a thread to handle a client connection and request, it takes one thread from the pool,
+or enqueue the request to the queue, in case there is no available thread in the pool.
 
 1.server.c - The server should handle the connections with the clients.
 
@@ -175,8 +181,5 @@ output:return the right num of the request On success, ow return 500
 /** after we send the file header, we need to send the content of the file. */
 output:void. just return. 
 
- **hope you will enjoy my EX3 **
- Shachar Israeli
- user name: israelish
 
 
